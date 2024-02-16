@@ -1,0 +1,102 @@
+Szachy szybkie, szachy aktywne – krótka partia szachowa, w której suma czasu do namysłu każdego gracza oraz sześćdziesięciokrotności ewentualnego czasu doliczanego za każde posunięcie jest większa niż 10 minut i mniejsza niż godzina (partie z sumą mniejszą niż lub równą 10 minut nazywane są błyskawicznymi)[1][a]. Partie szachów szybkich rozgrywane są według przepisów FIDE dla szachów klasycznych, z drobnymi modyfikacjami (na przykład zawodnicy nie są zobowiązani do prowadzenia zapisów).
+
+Do 1 lipca 2014 do szachów szybkich zaliczano partie, w których suma czasu do namysłu każdego gracza oraz sześćdziesięciokrotności ewentualnego czasu doliczanego za każde posunięcie wynosiła minimum 15 minut (ale była mniejsza niż godzina)[3].
+
+Mistrzostwa świata
+Turnieje o mistrzostwo świata w szachach szybkich nie są rozgrywane cyklicznie.
+
+Rok / Miasto	System	Medaliści	Wyniki
+2001
+Cannes	pucharowy	
+Rosja Garri Kasparow
+Rosja Jewgienij Bariejew
+Rosja Aleksandr Griszczuk
+Węgry Judit Polgár
+[1]
+2003
+Cap d’Agde	pucharowy	
+Indie Viswanathan Anand
+Rosja Władimir Kramnik
+Rosja Aleksandr Griszczuk
+Rosja Piotr Swidler
+[2]
+2009
+Moguncja	pucharowy	
+Armenia Lewon Aronian
+Rosja Jan Niepomniaszczij
+Indie Viswanathan Anand
+Niemcy Arkadij Naiditsch
+[3]
+2010
+Moguncja	szwajcarski	
+Stany Zjednoczone Gata Kamski
+Azerbejdżan Vüqar Həşimov
+Armenia Lewon Aronian
+[4]
+2012
+Astana	kołowy	
+Rosja Siergiej Kariakin
+Norwegia Magnus Carlsen
+Bułgaria Weselin Topałow
+[5]
+2013
+Chanty-Mansyjsk	szwajcarski	
+Azerbejdżan Şəhriyar Məmmədyarov
+Rosja Jan Niepomniaszczij
+Rosja Aleksandr Griszczuk
+[6]
+2014
+Dubaj	szwajcarski	
+Norwegia Magnus Carlsen
+Włochy Fabiano Caruana
+Indie Viswanathan Anand
+[7]
+[8]
+2015
+Berlin	szwajcarski	
+Norwegia Magnus Carlsen
+Rosja Jan Niepomniaszczij
+Azerbejdżan Teymur Rəcəbov
+[9]
+2016
+Doha	szwajcarski	
+Ukraina Wasyl Iwanczuk
+Rosja Aleksandr Griszczuk
+Norwegia Magnus Carlsen
+[10]
+2017
+Rijad	szwajcarski	
+Indie Viswanathan Anand
+Rosja Władimir Fiedosiejew
+Rosja Jan Niepomniaszczij
+[11]
+2018
+Petersburg	szwajcarski	
+Rosja Daniił Dubow
+Azerbejdżan Şəhriyar Məmmədyarov
+Stany Zjednoczone Hikaru Nakamura
+[12]
+2019
+Moskwa	szwajcarski	
+Norwegia Magnus Carlsen
+ Alireza Firuzdża
+Stany Zjednoczone Hikaru Nakamura
+[13]
+2021
+Warszawa	szwajcarski	
+Uzbekistan Nodirbek Abdusattorov
+Rosja Jan Niepomniaszczij
+Norwegia Magnus Carlsen
+[14]
+2022
+Ałmaty	szwajcarski	
+Norwegia Magnus Carlsen
+Niemcy Vincent Keymer
+Stany Zjednoczone Fabiano Caruana
+[15]
+2023
+Samarkanda	szwajcarski	
+Norwegia Magnus Carlsen
+Słowenia Władimir Fiedosiejew
+ Yu Yangyi
+[16]
