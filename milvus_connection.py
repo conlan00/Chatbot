@@ -21,6 +21,7 @@ def num_tokens(text: str, model: str = GPT_MODEL) -> int:
     encoding = tiktoken.encoding_for_model(model)
     return len(encoding.encode(text))
 
+#laczenie z baza 
 def connect():
     connections.connect(host="192.168.0.213", port="19530")
     try:
@@ -31,7 +32,7 @@ def connect():
     except MilvusException as e:
         print(e)
 
-
+#przykladowe zaladowanie daych --> lepiej w pliku szachy.ipynb
 def insertData(fileName: str):
     # winter = 'winter_olympics_2022.csv'
     df1=pd.read_csv(fileName)
@@ -39,6 +40,9 @@ def insertData(fileName: str):
     df1=df1[['embedding','text']]
     df1=df1.rename(columns={'embedding':'vector'})
     return df1
+
+#przeszukiwanie bazy aby znalezc jak najbardziej odpowiedznie rekordy 
+# za pomocą knn(odpowiada za to baza)
 def similarities(prompt: str):
     try:
         #prompt='Which athletes won the gold medal in curling at the 2022 Winter Olympics?'
@@ -50,10 +54,10 @@ def similarities(prompt: str):
             "ignore_growing": False,
             "params": {"nprobe": 10}
         }
-        collection = Collection("documents")
+        collection = Collection("documents")#nazwa kolekcji w bazie
         similarity_search_result = collection.search(
             data=[vector_prompt],
-            anns_field="vector",
+            anns_field="vector",#nazwa kolumny z wektorem
             param=search_params,
             limit=1,#ile ma zwrocic najbardziej podobnych
             output_fields=['text']
