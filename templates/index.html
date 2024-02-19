@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/main.css') }}">
-
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <title>Bocik</title>
 </head>
 <header class="header">
@@ -30,7 +30,29 @@
 <main>
 	<section class="home">
 		<div id="home">
-			<h1>Home</h1>
+			<!-- <div class="chat"> -->
+				<div  id="chatbox">
+
+				</div>
+				
+				<span  class="loader" id="loader"></span>
+				
+				<div  id="ib" >
+				
+				<input  id="userInput" type="text">
+				<button onclick="sendMessage()" class="btn-snd" ><i class='bx bxs-send bx-flip-vertical' ></i></button>
+				<!-- <i class='bx bx-send bx-tada bx-flip-vertical' ></i> -->
+				<!-- <button  onclick="sendMessage()" id="send">Send</button> -->
+				
+				</div>
+				
+				
+				<script src="{{url_for('static', filename='send.js')}}"></script>
+				<script src="{{url_for('static', filename='sendEnter.js')}}"></script>
+				
+				
+			<!-- </div> -->
+			
 		</div>
 	</section>
 </main>

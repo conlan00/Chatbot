@@ -23,7 +23,7 @@ def num_tokens(text: str, model: str = GPT_MODEL) -> int:
 
 #laczenie z baza 
 def connect():
-    connections.connect(host="192.168.0.213", port="19530")
+    connections.connect(host="172.25.161.17", port="19530")
     try:
         print("Connecting to database ..........")
         # List all collections
@@ -115,14 +115,14 @@ def ask(query: str,model: str = GPT_MODEL,token_budget: int = 4096 - 500,print_m
 
 
 
-def main():
-    connect()
-   # similarities()
-    print(ask('Podaj informacje jakie posiadasz na o szachach szybkich z 2023 roku'))
+# def main():
+#     connect()
+#     #similarities()
+#     print(ask('Szachy szybkie w 2023 rok, kto i gdzie'))
    
-    try:
-        collection = Collection("documents")      # Get an existing collection.
-        #mr = collection.insert(insertData('winter_olympics_2022.csv'))
-    except MilvusException as e:
-        print(e)
-main()
+#     try:
+#         collection = Collection("documents")      # Get an existing collection.
+#         #mr = collection.insert(insertData('winter_olympics_2022.csv'))
+#     except MilvusException as e:
+#         print(e)
+# main()
