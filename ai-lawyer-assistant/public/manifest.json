@@ -1,0 +1,29 @@
+{
+    "manifest_version": 3,
+    "version": "1.0.0",
+    "name": "AI Lawyer Assistant",
+    "permissions": [
+        "scripting",
+        "storage",
+        "identity",
+        "sidePanel",
+        "tabs"
+    ],
+    "side_panel": {
+        "default_path": "index.html"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {
+        "default_title": "Click to open panel"
+    },
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*",
+        "https://www.googleapis.com/"
+    ],
+    "icons": {
+        "48" : "icon.png"
+    }
+}
