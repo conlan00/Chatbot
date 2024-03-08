@@ -1,8 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [inuputFiles, setInputFiles] = useState(false);
+
+  useEffect(() => {
+    function handleVisibilityChange() {
+      if (document.visibilityState === 'hidden') {
+        chrome.runtime.sendMessage({ action: "executeOnClose" });
+      }
+    }
+  
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+  
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
+  const performAction = async () => {
+      const response = await fetch('http://localhost:5000/collection/drop', {
+          method: 'POST',
+      });
+
+      const responseData = response.json();
+      console.log(responseData.answer)
+      window.close()
+}
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
@@ -17,14 +44,20 @@ function App() {
     setMessages(prevMessages => [...prevMessages, { text: input, sender: 'user' }]);
     setInput('');
 
-    const response = await fetch('http://localhost:5000/ask', {
+    let requestBody = {
+      'message': input
+    };
+
+    requestBody.mode = inuputFiles ? 'file' : 'base';
+
+    const jsonBody = JSON.stringify(requestBody);
+
+    const response = await fetch('http://localhost:5000/ask/knowledge', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        'message': input
-      }),
+      body: jsonBody,
     });
     const responseData = await response.json();
     console.log(responseData.answer);
@@ -71,7 +104,16 @@ function App() {
   return (
     <>
       <div className=" font-kanit text-slate-200 text-xl container m-auto max-w-screen-md">
-        <h1 className=" ml-10 mt-5">Witaj w AI Lawyer Assistant</h1>
+        <div className='flex justify-between'>
+          <h1 className=" ml-10 mt-5">Witaj w AI Lawyer Assistant</h1>
+          <button className='mr-10 mt-5' onClick={() => {performAction()}}>
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M18 6l-12 12" />
+            <path d="M6 6l12 12" />
+          </svg>
+          </button>
+        </div>
+        <FormControlLabel control={<Switch onChange={() => {setInputFiles(!inuputFiles)}} sx={{ml:5, mt:2, alignContent:'center'}}/>} label="Wgraj własne pliki"/> 
         <div className='flex flex-col border border-slate-400 rounded-xl w-85-screen max-w-screen-md pb-5 mt-5 m-auto font-light text-base'>
           <div className='flex flex-col place-self-center h-96 w-full p-5 overflow-y-auto'>
             <div className='pt-5'>
@@ -97,7 +139,7 @@ function App() {
             </div>
           </div>
           <div className='flex justify-between mt-5'>
-            <input type="text" placeholder='Zadaj pytanie...' className='w-full p-2 mx-4 rounded-xl' value={input} onChange={handleInputChange}/>
+            <input type="text" placeholder='Zadaj pytanie...' className='w-full p-2 mx-4 rounded-xl' value={input} onChange={handleInputChange} onKeyDown={(e) => { if(e.key === 'Enter') handleAskGPT(); }}/>
             <button onClick={handleAskGPT}>
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-square-rounded-arrow-up-filled mr-4" width="32" height="32" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -111,7 +153,7 @@ function App() {
             </button>
           </div>
         </div>
-        <div className='flex justify-between align-top ml-10 text-base font-normal mt-5'>
+        <div className={`${inuputFiles ? 'flex' : 'hidden'} justify-between align-top ml-10 text-base font-normal mt-5`}>
           <div className='flex flex-col'>
             <label htmlFor="pdf-upload" className='mb-3'>Prześlij pliki .pdf do modelu</label>
             <input type="file" id="pdf-upload" accept='.pdf' multiple onChange={displayFileNames}/>

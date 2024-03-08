@@ -42,7 +42,7 @@ def create_collection(name: str):
         shards_num=4
     )
     return new_collection
-
+    
 connect()
 # text = "ala ma kota"
 # vectors = service.get_embbedings(text)
