@@ -75,10 +75,10 @@ def similarities(prompt: str):
         print(e)
 
 
-def query_message(query: str,model: str,token_budget: int) -> str:
+def query_message(query: str,model: str,token_budget: int,conversation_history: str ="") -> str:
     """Return a message for GPT, with relevant source texts pulled from a dataframe."""
     strings = similarities(query)
-    introduction = 'Aby odpowiedzieć na kolejne pytanie, skorzystaj z poniższych artykułów na temat Mistrzostw szach szybkich. Jeśli odpowiedzi nie znajdziesz w artykułach, napisz: „Nie mogłem znaleźć odpowiedzi."'
+    introduction = 'Aby odpowiedzieć na kolejne pytanie, skorzystaj z poniższych artykułów na temat Mistrzostw szach szybkich oraz na podstawie mojej wcześniejszej konwersacji z tobą, która znajduje się tutaj:{}. Jeśli odpowiedzi nie znajdziesz w artykułach, napisz: „Nie mogłem znaleźć odpowiedzi."'.format(conversation_history)
     question = f"\n\nQuestion: {query}"
     message = introduction
     for string in strings:
@@ -93,9 +93,9 @@ def query_message(query: str,model: str,token_budget: int) -> str:
             print(message)
     return message + question
 
-def ask(query: str,model: str = GPT_MODEL,token_budget: int = 4096 - 500,print_message: bool = False,) -> str:
+def ask(query: str,model: str = GPT_MODEL,token_budget: int = 4096 - 500,print_message: bool = False, conversation_history: str ="") -> str:
     """Answers a query using GPT and a dataframe of relevant texts and embeddings."""
-    message = query_message(query,model=model, token_budget=token_budget)
+    message = query_message(query,model=model, token_budget=token_budget,conversation_history=conversation_history)
     if print_message:
         print(message)
     messages = [

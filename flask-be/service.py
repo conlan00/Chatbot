@@ -10,8 +10,8 @@ import numpy as np
 
 load_dotenv()  # take environment variables from .env.
 
-client = OpenAI()
-client.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key='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')
+#client.api_key = os.getenv("OPENAI_API_KEY")
 pdf_paths = ['M:\AI\hackhaton-project\kodeks_karny.pdf']
 
 def askGPT(question: str) -> str:
@@ -28,6 +28,7 @@ def askGPT(question: str) -> str:
 
 def handleFiles(files):
     texts = get_pdf_text(files)
+    print(texts)
     chunks = processPdfs(texts)
     get_vectore_store(chunks)
 
@@ -67,6 +68,7 @@ def get_embbedings(text, **kwargs):
 def get_vectore_store(chunks_array):
     collection = create_collection('test')
     inserted_rows = 0
+    print(chunks_array)
     for chunks in chunks_array:
         data = [{'text': chunk, 'vector': get_embbedings(chunk)} for chunk in chunks]
         df_efficient = pd.DataFrame(data)
