@@ -207,8 +207,8 @@ function App() {
                 <label for="checkbox1">Assign "Cesja"</label>
                 <input type="checkbox" id="checkbox2" className="mr-2 w-auto bg-white" onChange={(e) => handleCheckboxChange(e, '2')}/>
                 <label for="checkbox2">Limitation of Liability - price </label>
-                <input type="checkbox" id="checkbox3" className="w-auto bg-white" onChange={(e) => handleCheckboxChange(e, '3')}/>
-                <label for="checkbox3">Maximum aggregate liability</label>
+                {/* <input type="checkbox" id="checkbox3" className="w-auto bg-white" onChange={(e) => handleCheckboxChange(e, '3')}/>
+                <label for="checkbox3">Maximum aggregate liability</label> */}
             </div>
           </div>
             <label htmlFor="pdf-upload" className='mb-3'>Prześlij pliki .pdf do modelu</label>

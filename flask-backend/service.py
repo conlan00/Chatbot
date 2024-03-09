@@ -114,18 +114,18 @@ def askGPT_with_knowladge_base_checkboxes(collection_name: str, question: str, r
     print("Skojarzone teksty: \n", knowledge_chunks_str)
     print("Historia konwersacji: \n", conversation_history_str)
     instruction ="Jesteś pomocnym doradcą, który szuka niespojności w umowach od klientów w sprawach prawniczych miedzy dużymi korporacjami, na każde pytanie odpowiadaj profesjonalnym językiem, będziesz odpowiadał TAK jeśli podany tekst przez uzytkownika nie zawiera niespójności z wymaganiami asystenta lub będziesz odpowiadał NIE jeśli podany tekst przez uzytkownika zawiera niespójności z wymaganiami asystenta i mówił dlaczego"
-    # response = client.chat.completions.create(
-    #     model=MODEL,
-    #     messages=[
-    #         {"role": "system", "content": "},
-    #         # {"role": "system", "content": conversation_history_str},
-    #         {"role": "assistant", "content": question},
-    #         {"role": "user", "content": knowledge_chunks_str}
-    #     ]
-    # )
-    response=GPT4(instruction,question,knowledge_chunks_str)
+    response = client.chat.completions.create(
+        model=MODEL,
+        messages=[
+            {"role": "system", "content": instruction},
+            # {"role": "system", "content": conversation_history_str},
+            {"role": "assistant", "content": question},
+            {"role": "user", "content": knowledge_chunks_str}
+        ]
+    )
+    #response=GPT4(instruction,question,knowledge_chunks_str)
     
-    answer = response
+    answer = response.choices[0].message.content
     conversation_history.append("Human: " + question)
     conversation_history.append("AI: " + answer)
     
