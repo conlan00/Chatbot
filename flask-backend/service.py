@@ -11,10 +11,12 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
 from itertools import chain
 
-#load_dotenv()  # take environment variables from .env.
+load_dotenv()  # take environment variables from .env.
 
-client=OpenAI(api_key='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')
-#client.api_key = os.getenv("OPENAI_API_KEY")
+client=OpenAI()
+
+MODEL="gpt-4"
+client.api_key = os.getenv("OPENAI_API_KEY")
 pdf_paths = ['M:\AI\hackhaton-project\kodeks_karny.pdf', 'M:\AI\hackhaton-project\konstytucja.pdf']
 inserted_rows_count = 0
 conversation_history = []
@@ -83,7 +85,7 @@ def askGPT_with_knowladge_base(collection_name: str, question: str, returned_chu
     print("Historia konwersacji: \n", conversation_history_str)
     
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model=MODEL,
         messages=[
             {"role": "system", "content": "Jesteś pomocnym doradcą w sprawach prawniczych, na każde pytanie odpowiadaj profesjonalnym językiem i przy odpowiedzi sugeruj się dostarczonymi tekstami"},
             {"role": "system", "content": conversation_history_str},
@@ -113,7 +115,7 @@ def askGPT_with_knowladge_base_checkboxes(collection_name: str, question: str, r
     print("Historia konwersacji: \n", conversation_history_str)
     
     response = client.chat.completions.create(
-        model="gpt-4-turbo-preview",
+        model=MODEL,
         messages=[
             {"role": "system", "content": "Jesteś pomocnym doradcą poprawek w sprawach umów prawniczych miedzy dużymi korporacjami, na każde pytanie odpowiadaj profesjonalnym językiem, będziesz odpowiadał TAK jeśli podany tekst przez asystenta jest zgodny z wymaganiami, które podał użytkownik lub będziesz odpowiadał NIE jeśli podany tekst przez asystenta nie jest zgodny z wymaganiami i mówił dlaczego"},
             # {"role": "system", "content": conversation_history_str},
@@ -130,7 +132,7 @@ def askGPT_with_knowladge_base_checkboxes(collection_name: str, question: str, r
 #######==============================
 def askGPT(question: str) -> str:
     completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model=MODEL,
         messages=[
             # {"role": "system", "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."},
             {"role": "user", "content": question}
