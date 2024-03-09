@@ -1,8 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [inuputFiles, setInputFiles] = useState(false);
+
+  useEffect(() => {
+    function handleVisibilityChange() {
+      if (document.visibilityState === 'hidden') {
+        chrome.runtime.sendMessage({ action: "executeOnClose" });
+      }
+    }
+  
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+  
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
+  const performAction = async () => {
+      const response = await fetch('http://localhost:5000/collection/drop', {
+          method: 'POST',
+      });
+
+      const responseData = response.json();
+      console.log(responseData.answer)
+      window.close()
+}
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
@@ -17,14 +44,20 @@ function App() {
     setMessages(prevMessages => [...prevMessages, { text: input, sender: 'user' }]);
     setInput('');
 
-    const response = await fetch('http://localhost:5000/ask', {
+    let requestBody = {
+      'message': input
+    };
+
+    requestBody.mode = inuputFiles ? 'file' : 'base';
+
+    const jsonBody = JSON.stringify(requestBody);
+
+    const response = await fetch('http://localhost:5000/ask/knowledge', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        'message': input
-      }),
+      body: jsonBody,
     });
     const responseData = await response.json();
     console.log(responseData.answer);
@@ -67,11 +100,66 @@ function App() {
       console.error(error);
     }
   }
+  // ja pisalem - obsluga checkboxa
+  const handleCheckboxChange = (event, checkboxId) => {
+    if(event.target.checked){
+      switch(checkboxId) {
+        case '1':
+          console.log(`Checkbox ${checkboxId} został ${event.target.checked ? 'zaznaczony' : 'odznaczony'}.`);
+          sendDataToEndpoint(checkboxId)
+          break;
+        case '2':
+          console.log(`Checkbox ${checkboxId} został ${event.target.checked ? 'zaznaczony' : 'odznaczony'}.`);
+          sendDataToEndpoint(checkboxId)
+          break;
+        case '3':
+          console.log(`Checkbox ${checkboxId} został ${event.target.checked ? 'zaznaczony' : 'odznaczony'}.`);
+          sendDataToEndpoint(checkboxId)
+          break;
+        default:
+          // Domyślna logika, jeśli potrzebna
+          break;
+      }
+    }
+    
 
+  };
+  //wyslanie parametru na endpoint checkboxa
+  const sendDataToEndpoint = async (checkboxId) => {
+    try {
+      const response = await fetch('http://localhost:5000/checkboxes', {
+        method: 'POST', // lub 'GET', zależnie od wymagań API
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ checkboxId }), // Przesłanie jedynie checkboxId
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      // console.log('Success:', data);
+      setMessages(prevMessages => [...prevMessages, { text: data.answer, sender: 'model' }]);
+      setInput('');
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
   return (
     <>
       <div className=" font-kanit text-slate-200 text-xl container m-auto max-w-screen-md">
-        <h1 className=" ml-10 mt-5">Witaj w AI Lawyer Assistant</h1>
+        <div className='flex justify-between'>
+          <h1 className=" ml-10 mt-5">Witaj w AI Lawyer Assistant</h1>
+          <button className='mr-10 mt-5' onClick={() => {performAction()}}>
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M18 6l-12 12" />
+            <path d="M6 6l12 12" />
+          </svg>
+          </button>
+        </div>
+        <FormControlLabel control={<Switch onChange={() => {setInputFiles(!inuputFiles)}} sx={{ml:5, mt:2, alignContent:'center'}}/>} label="Wgraj własne pliki"/> 
         <div className='flex flex-col border border-slate-400 rounded-xl w-85-screen max-w-screen-md pb-5 mt-5 m-auto font-light text-base'>
           <div className='flex flex-col place-self-center h-96 w-full p-5 overflow-y-auto'>
             <div className='pt-5'>
@@ -96,8 +184,8 @@ function App() {
               ))}
             </div>
           </div>
-          <div className='flex justify-between mt-5'>
-            <input type="text" placeholder='Zadaj pytanie...' className='w-full p-2 mx-4 rounded-xl' value={input} onChange={handleInputChange}/>
+          {/* <div className='flex justify-between mt-5'>
+            <input type="text" placeholder='Zadaj pytanie...' className='w-full p-2 mx-4 rounded-xl' value={input} onChange={handleInputChange} onKeyDown={(e) => { if(e.key === 'Enter') handleAskGPT(); }}/>
             <button onClick={handleAskGPT}>
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-square-rounded-arrow-up-filled mr-4" width="32" height="32" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -109,15 +197,27 @@ function App() {
                      2.292a1 1 0 0 1 -1.32 .083l-.094 -.083a1 1 0 0 1 -.083 -1.32l.083 -.094l4 -4a.927 .927 0 0 1 .112 -.097l.11 -.071l.114 -.054l.105 -.035l.118 -.025z" fill="currentColor" stroke-width="0" />
               </svg>
             </button>
-          </div>
+          </div> */}
         </div>
-        <div className='flex justify-between align-top ml-10 text-base font-normal mt-5'>
+        <div className={`${inuputFiles ? 'flex' : 'hidden'} justify-between align-top ml-10 text-base font-normal mt-5`}>
           <div className='flex flex-col'>
+          <div class='flex flex-col'>
+            <div class="flex items-center">
+                <input type="checkbox" id="checkbox1" className="mr-2 w-auto bg-white" onChange={(e) => handleCheckboxChange(e, '1')}/>
+                <label for="checkbox1">Assign "Cesja"</label>
+                <input type="checkbox" id="checkbox2" className="mr-2 w-auto bg-white" onChange={(e) => handleCheckboxChange(e, '2')}/>
+                <label for="checkbox2">Limitation of Liability - price </label>
+                <input type="checkbox" id="checkbox3" className="w-auto bg-white" onChange={(e) => handleCheckboxChange(e, '3')}/>
+                <label for="checkbox3">Maximum aggregate liability</label>
+            </div>
+          </div>
             <label htmlFor="pdf-upload" className='mb-3'>Prześlij pliki .pdf do modelu</label>
             <input type="file" id="pdf-upload" accept='.pdf' multiple onChange={displayFileNames}/>
             <div id='filenames' className='mt-3'></div>
           </div>
+          
           <div className=' flex-shrink mr-5'>
+          
             <button className='py-2 px-4 bg-slate-600 border hover:bg-slate-700 border-slate-500 rounded-xl mr-5' onClick={handleDocumentSend}>Prześlij</button>
           </div>
         </div>

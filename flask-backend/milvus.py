@@ -3,7 +3,7 @@ import pandas as pd
 
 def connect():
     connections.connect(
-        host = "172.25.161.17",
+        host = "192.168.56.1",
         port = "19530"
     )
     try:
@@ -42,7 +42,7 @@ def create_collection(name: str):
         shards_num=4
     )
     return new_collection
-
+    
 connect()
 # text = "ala ma kota"
 # vectors = service.get_embbedings(text)
