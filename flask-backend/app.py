@@ -120,7 +120,7 @@ def handlecheckboxes():
             return jsonify({'answer': answer})
             
         except Exception as ex:
-                print(ex)
+            print(ex)
     return jsonify({'message': f'Dane dla {checkbox_id} zostały pomyślnie otrzymane.'})
 
 if __name__ == '__main__':
