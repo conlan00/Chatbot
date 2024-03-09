@@ -1,4 +1,4 @@
-from openai import OpenAI
+from openai import OpenAI,AzureOpenAI
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 import os
@@ -13,9 +13,9 @@ from itertools import chain
 
 load_dotenv()  # take environment variables from .env.
 
-client=OpenAI()
+client = OpenAI()
 
-MODEL="gpt-4"
+MODEL="gpt-4-turbo-preview"
 client.api_key = os.getenv("OPENAI_API_KEY")
 pdf_paths = ['M:\AI\hackhaton-project\kodeks_karny.pdf', 'M:\AI\hackhaton-project\konstytucja.pdf']
 inserted_rows_count = 0
@@ -113,22 +113,79 @@ def askGPT_with_knowladge_base_checkboxes(collection_name: str, question: str, r
     knowledge_chunks_str = "\n".join(knowledge_chunks)
     print("Skojarzone teksty: \n", knowledge_chunks_str)
     print("Historia konwersacji: \n", conversation_history_str)
+    instruction ="Jesteś pomocnym doradcą, który szuka niespojności w umowach od klientów w sprawach prawniczych miedzy dużymi korporacjami, na każde pytanie odpowiadaj profesjonalnym językiem, będziesz odpowiadał TAK jeśli podany tekst przez uzytkownika nie zawiera niespójności z wymaganiami asystenta lub będziesz odpowiadał NIE jeśli podany tekst przez uzytkownika zawiera niespójności z wymaganiami asystenta i mówił dlaczego"
+    # response = client.chat.completions.create(
+    #     model=MODEL,
+    #     messages=[
+    #         {"role": "system", "content": "},
+    #         # {"role": "system", "content": conversation_history_str},
+    #         {"role": "assistant", "content": question},
+    #         {"role": "user", "content": knowledge_chunks_str}
+    #     ]
+    # )
+    response=GPT4(instruction,question,knowledge_chunks_str)
     
-    response = client.chat.completions.create(
-        model=MODEL,
-        messages=[
-            {"role": "system", "content": "Jesteś pomocnym doradcą poprawek w sprawach umów prawniczych miedzy dużymi korporacjami, na każde pytanie odpowiadaj profesjonalnym językiem, będziesz odpowiadał TAK jeśli podany tekst przez asystenta jest zgodny z wymaganiami, które podał użytkownik lub będziesz odpowiadał NIE jeśli podany tekst przez asystenta nie jest zgodny z wymaganiami i mówił dlaczego"},
-            # {"role": "system", "content": conversation_history_str},
-            {"role": "assistant", "content": question},
-            {"role": "user", "content": knowledge_chunks_str}
-        ]
-    )
-    
-    answer = response.choices[0].message.content
+    answer = response
     conversation_history.append("Human: " + question)
     conversation_history.append("AI: " + answer)
     
     return answer
+
+
+import urllib.request
+import json
+def GPT4(system: str,assistant: str, user:str):
+    url = "https://lr-lm-sandbox-ams.azure-api.net/language-model-sandbox-legal-and-regulatory-v2-prod/api/chat-completions"
+
+    # Przygotowanie nagłówków żądania
+    hdr = {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+        'Ocp-Apim-Subscription-Key': '5cfae7646a2445008ca53f758b04326f',
+    }
+
+    # Dane, które chcesz wysłać
+    data = {
+        "user_id": "LH2024-team05@wolterskluwer.com",
+        "chat_completions_config": {
+            "model_name": "gpt-4",
+            "model_version": "1106-Preview",
+            "temperature": 0,
+            "max_tokens": 4000,
+            "top_p": 1,
+            "frequency_penalty": 1,
+            "presence_penalty": 1
+        },
+        "prompt": [
+            {"role": "system","content": system},
+            {"role": "assistant","content": assistant},
+            {"role": "user","content": user}
+        ]
+    }
+
+    # Konwersja słownika Pythona na ciąg JSON
+    data = json.dumps(data).encode('utf-8')
+
+    try:
+        # Utworzenie żądania z danymi i nagłówkami
+        req = urllib.request.Request(url, data=data, headers=hdr, method='POST')
+        
+        # Wysyłanie żądania i odbieranie odpowiedzi
+        with urllib.request.urlopen(req) as response:
+            response_body = response.read()
+            decoded_response = response_body.decode('utf-8')
+            response_dict = json.loads(decoded_response)
+            
+            # Wypisanie tylko części 'openai_response'
+            z = response_dict.get("openai_response") # Użycie get() zapobiega błędom, jeśli klucz nie istnieje
+            x=str(z)
+        return x
+    except Exception as e:
+        print(e)
+        return None
+
+
+
 #######==============================
 def askGPT(question: str) -> str:
     completion = client.chat.completions.create(
