@@ -202,11 +202,15 @@ function App() {
         <div className={`${inuputFiles ? 'flex' : 'hidden'} justify-between align-top ml-10 text-base font-normal mt-5`}>
           <div className='flex flex-col'>
           <div class='flex flex-col'>
-            <div class="flex items-center">
+            <div class="flex flex-col mb-5">
+              <div>
                 <input type="checkbox" id="checkbox1" className="mr-2 w-auto bg-white" onChange={(e) => handleCheckboxChange(e, '1')}/>
                 <label for="checkbox1">Assign "Cesja"</label>
+              </div>
+              <div>
                 <input type="checkbox" id="checkbox2" className="mr-2 w-auto bg-white" onChange={(e) => handleCheckboxChange(e, '2')}/>
                 <label for="checkbox2">Limitation of Liability - price </label>
+              </div>
                 {/* <input type="checkbox" id="checkbox3" className="w-auto bg-white" onChange={(e) => handleCheckboxChange(e, '3')}/>
                 <label for="checkbox3">Maximum aggregate liability</label> */}
             </div>
